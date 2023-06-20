@@ -1,6 +1,6 @@
 # Chirpy: Boot.dev Tutorial Golang Server
 
-Welcome to the docs for Chirpy, a guided project from Boot.dev.
+Welcome to the docs for Chirpy, a guided project from [Boot.dev](https://boot.dev/).
 This project is sort of like that bird social media platform, but only broadly.
 It is an instructional Go server using Chi, JWTs, bcrypt, and godotenv.
 
@@ -382,7 +382,7 @@ If an error occurs while processing a request, an appropriate error message and 
 
 ## Testing
 
-Testing was done on <Boot.dev> through the browser with the tutorial interface. The encoded tests in this project are minimal. They do not and are not intended to validate required behavior, automate QA or anything else. To run the tests regardless, here's how:
+Testing was done on [Boot.dev](https://boot.dev/) through the browser with the tutorial interface. The encoded tests in this project are minimal. They do not and are not intended to validate required behavior, automate QA or anything else. To run the tests regardless, here's how:
 
 ```shell
 go test -v
@@ -392,11 +392,11 @@ go test -v
 
 "No project is ever finished, but it can be done." --Gene Kranz
 
-This project is done and is no longer maintained. To create your own version, go to <Boot.dev> and complete the course "Learn Web Servers". 
+This project is done and is no longer maintained. To create your own version, go to [Boot.dev](https://boot.dev/) and complete the course "Learn Web Servers". 
 
 ## License
 
-Do not deploy this server. It was created for instructional purposes once upon a time. To create your own version, go to <Boot.dev> and complete the course "Learn Web Servers".
+Do not deploy this server. It was created for instructional purposes once upon a time. To create your own version, go to [Boot.dev](https://boot.dev/) and complete the course "Learn Web Servers".
 
 ## Contact
 
