@@ -84,6 +84,7 @@ The server includes an API which exposes the following endpoints:
 Detailed information about each endpoint, including request and response examples:
 
 1. Check server readiness: `GET /api/healthz`
+   
    ####Example Request:
 
    ```bash
