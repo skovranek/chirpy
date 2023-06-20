@@ -325,56 +325,56 @@ Detailed information about each endpoint, including request and response example
 
 10. Delete a chirp: `DELETE /api/chirps/{chirp_id}`
 
-   **Example Request:**
+    **Example Request:**
 
-   **Header:**
-   >Authorization: Bearer your_valid_ACCESS_token_here
+    **Header:**
+    >Authorization: Bearer your_valid_ACCESS_token_here
 
-   **Required Query Parameters:**
+    **Required Query Parameters:**
 
-   Delete chirp by id:
-   >/api/chirps/{chirp_id}
+    Delete chirp by id:
+    >/api/chirps/{chirp_id}
 
-   ```bash
-   DELETE /api/chirps/1
-   ```
+    ```bash
+    DELETE /api/chirps/1
+    ```
 
-   **Example Response:**
+    **Example Response:**
 
-   **Header:**
-   >Status: 200
+    **Header:**
+    >Status: 200
 
-   ```json
-   {}
-   ```
+    ```json
+    {}
+    ```
 
 11. Webhook from a fictional third-party named "polka": `POST /api/polka/webhooks`
 
-   **Example Request:**
+    **Example Request:**
 
-   **Header:** *(use this fictional secret key)*
-   >Authorization: ApiKey f271c81ff7084ee5b99a5091b42d486e
+    **Header:** *(use this fictional secret key)*
+    >Authorization: ApiKey f271c81ff7084ee5b99a5091b42d486e
 
-   ```bash
-   POST /api/polka/webhooks
-   Content-Type: application/json
+    ```bash
+    POST /api/polka/webhooks
+    Content-Type: application/json
 
-   {
-     "event": "user.upgraded",
-     "data":  {
-       "user_id": 1
-     }
-   }
-   ```
+    {
+      "event": "user.upgraded",
+      "data":  {
+        "user_id": 1
+      }
+    }
+    ```
 
-   **Example Response:**
+    **Example Response:**
 
-   **Header:**
-   >Status: 200
+    **Header:**
+    >Status: 200
 
-   ```json
-   {}
-   ```
+    ```json
+    {}
+    ```
 
 ## Error Handling
 
