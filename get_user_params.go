@@ -6,14 +6,20 @@ import (
 	"net/http"
 )
 
-func getUserParams(r *http.Request, params interface{}) error {
+func getUserParams(r *http.Request) (UserParams, error) {
 	decoder := json.NewDecoder(r.Body)
+	userParams := UserParams{}
 
-	err := decoder.Decode(params)
+	err := decoder.Decode(&userParams)
 	if err != nil {
-		err = fmt.Errorf("Error decoding request body: %w", err)
-		return err
+		err = fmt.Errorf("Error decoding user parameters: %w", err)
+		return UserParams{}, err
 	}
 
-	return nil
+	return userParams, nil
+}
+
+type UserParams struct {
+	Password string `json:"password"`
+	Email    string `json:"email"`
 }

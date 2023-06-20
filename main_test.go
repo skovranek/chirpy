@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestCleanStr(t *testing.T) {
+func TestCensorProfanity(t *testing.T) {
 	cases := []struct {
 		input  string
 		expect string
@@ -38,7 +38,7 @@ func TestCleanStr(t *testing.T) {
 
 	for i, c := range cases {
 		t.Run(fmt.Sprintf("Test Case #%v:", i), func(t *testing.T) {
-			cleaned := cleanStr(c.input)
+			cleaned := censorProfanity(c.input)
 			if cleaned != c.expect {
 				t.Errorf("Unexpected: " + cleaned)
 				return

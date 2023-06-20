@@ -20,14 +20,6 @@ func NewDB(path string) (*DB, error) {
 	return &db, nil
 }
 
-func RemoveFile(path string) error {
-	err := os.Remove(path)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func (db *DB) ensureDB() error {
 	db.mux.Lock()
 	defer db.mux.Unlock()
@@ -41,8 +33,8 @@ func (db *DB) ensureDB() error {
 }
 
 func (db *DB) loadDB() (DBStruct, error) {
-	db.mux.Lock()
-	defer db.mux.Unlock()
+	db.mux.RLock()
+	defer db.mux.RUnlock()
 
 	f, err := os.OpenFile(db.path, os.O_RDONLY, 0400) // 0400 is user read only
 	defer f.Close()
@@ -57,9 +49,10 @@ func (db *DB) loadDB() (DBStruct, error) {
 
 	if fileInfo.Size() == 0 {
 		dbStruct := DBStruct{
-			Chirps:        map[int]Chirp{},
 			Users:         map[int]User{},
+			Emails:        map[string]int{},
 			RevokedTokens: map[string]time.Time{},
+			Chirps:        map[int]Chirp{},
 		}
 		return dbStruct, nil
 	}
@@ -93,6 +86,14 @@ func (db *DB) writeDB(dbStruct DBStruct) error {
 		return err
 	}
 	_, err = f.Write(dat)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func RemoveFile(path string) error {
+	err := os.Remove(path)
 	if err != nil {
 		return err
 	}

@@ -3,15 +3,12 @@ package main
 import (
 	"log"
 	"net/http"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 func (cfg *apiConfig) updateUserHandler(w http.ResponseWriter, r *http.Request) {
-	params := struct {
-		Password string `json:"password"`
-		Email    string `json:"email"`
-	}{}
-
-	err := getUserParams(r, &params)
+	userParams, err := getUserParams(r)
 	if err != nil {
 		log.Printf("Error decoding request body: %v", err)
 		respondWithError(w, http.StatusInternalServerError, "Couldn't decode request body")
@@ -30,7 +27,15 @@ func (cfg *apiConfig) updateUserHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	user, err := cfg.db.UpdateUser(tokenData.userID, params.Password, params.Email)
+	newPassword := []byte(userParams.Password)
+	hashedPW, err := bcrypt.GenerateFromPassword(newPassword, bcrypt.MinCost) // cost param min-max: 4-31
+	if err != nil {
+		log.Printf("Error hashing password: %v", err)
+		respondWithError(w, http.StatusInternalServerError, "Coundn't update user in database")
+		return
+	}
+
+	user, err := cfg.db.UpdateUser(tokenData.userID, hashedPW, userParams.Email)
 	if err != nil {
 		log.Printf("Error updating user in database: %v", err)
 		respondWithError(w, http.StatusInternalServerError, "Coundn't update user in database")

@@ -1,10 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 	"strings"
-	"encoding/json"
 )
 
 func (cfg *apiConfig) createChirpHandler(w http.ResponseWriter, r *http.Request) {
@@ -16,27 +16,27 @@ func (cfg *apiConfig) createChirpHandler(w http.ResponseWriter, r *http.Request)
 	}
 	if tokenData.issuer != "chirpy-access" {
 		log.Printf("Error validating token: must be an access token")
-		respondWithError(w, http.StatusUnauthorized, "Couldn't validate token")
+		respondWithError(w, http.StatusUnauthorized, "Couldn't validate token: must be an access token")
 		return
 	}
 
 	decoder := json.NewDecoder(r.Body)
-	params := struct {
+	chirpParams := struct {
 		Body string `json:"body"`
 	}{}
-	err = decoder.Decode(&params)
+	err = decoder.Decode(&chirpParams)
 	if err != nil {
 		log.Printf("Error decoding parameters: %v", err)
-		respondWithError(w, http.StatusUnauthorized, "Couldn't decode parameters")
+		respondWithError(w, http.StatusUnauthorized, "Couldn't get request body")
 		return
 	}
 
-	if len(params.Body) > 140 {
+	if len(chirpParams.Body) > 140 {
 		log.Printf("Chirp is too long")
 		respondWithError(w, http.StatusBadRequest, "Chirp is too long")
 		return
 	}
-	cleanedBody := censorProfanity(params.Body)
+	cleanedBody := censorProfanity(chirpParams.Body)
 	chirp, err := cfg.db.CreateChirp(tokenData.userID, cleanedBody)
 	if err != nil {
 		log.Printf("Error saving chirp to database: %v", err)

@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"log"
 )
 
@@ -10,22 +11,22 @@ func (db *DB) CreateChirp(authorID int, body string) (Chirp, error) {
 		return Chirp{}, err
 	}
 
-	chirpID := len(dbStruct.Chirps)
+	uniqueID := len(dbStruct.Chirps)
 	for {
-		chirpID++
-		if _, exists := dbStruct.Chirps[chirpID]; exists {
-			log.Printf("Chirp ID already assigned: #%v\n", chirpID)
+		uniqueID++
+		if _, exists := dbStruct.Chirps[uniqueID]; exists {
+			log.Printf("Chirp ID already assigned: #%v\n", uniqueID)
 		} else {
 			break
 		}
 	}
 	chirp := Chirp{
-		ID:       chirpID,
+		ID:       uniqueID,
 		AuthorID: authorID,
 		Body:     body,
 	}
 
-	dbStruct.Chirps[chirpID] = chirp
+	dbStruct.Chirps[uniqueID] = chirp
 
 	err = db.writeDB(dbStruct)
 	if err != nil {
@@ -35,13 +36,21 @@ func (db *DB) CreateChirp(authorID int, body string) (Chirp, error) {
 	return chirp, nil
 }
 
-func (db *DB) DeleteChirp(chirpID int) error {
+func (db *DB) DeleteChirp(userID, chirpID int) error {
 	dbStruct, err := db.loadDB()
 	if err != nil {
 		return err
 	}
 
-	delete(dbStruct.Chirps, chirpID)
+	if chirp, exists := dbStruct.Chirps[chirpID]; !exists {
+		err := fmt.Errorf("Error cannot get chirp with ID: #%v", chirpID)
+		return err
+	} else if chirp.AuthorID == userID {
+		delete(dbStruct.Chirps, chirpID)
+	} else {
+		err := fmt.Errorf("Error user #%v did not author chirp #%v", userID, chirpID)
+		return err
+	}
 
 	err = db.writeDB(dbStruct)
 	if err != nil {
@@ -63,4 +72,19 @@ func (db *DB) GetChirps() ([]Chirp, error) {
 	}
 
 	return chirps, nil
+}
+
+func (db *DB) GetChirpByID(id int) (Chirp, error) {
+	dbStruct, err := db.loadDB()
+	if err != nil {
+		return Chirp{}, err
+	}
+
+	chirp, exists := dbStruct.Chirps[id]
+	if !exists {
+		err = fmt.Errorf("Error cannot get chirp with ID: #%v", id)
+		return Chirp{}, err
+	}
+
+	return chirp, nil
 }

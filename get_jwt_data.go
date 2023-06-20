@@ -10,6 +10,12 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+type TokenData struct {
+	Token  string
+	userID int
+	issuer string
+}
+
 func (cfg *apiConfig) getJWTData(r *http.Request) (TokenData, error) {
 	tokenAndPrefixStr := r.Header.Get("Authorization")
 	unparsedTokenStr := strings.TrimPrefix(tokenAndPrefixStr, "Bearer ")
@@ -22,13 +28,13 @@ func (cfg *apiConfig) getJWTData(r *http.Request) (TokenData, error) {
 		return TokenData{}, err
 	}
 
-	claims, ok := token.Claims.(*jwt.RegisteredClaims)
-	if !ok {
+	claims, exists := token.Claims.(*jwt.RegisteredClaims)
+	if !exists {
 		err = fmt.Errorf("Error validating token: token does not exist")
 		return TokenData{}, err
 	}
 	if !token.Valid {
-		err = fmt.Errorf("Error validating token: %w", token.Valid)
+		err = fmt.Errorf("Error token is invalid")
 		return TokenData{}, err
 	}
 
@@ -56,15 +62,9 @@ func (cfg *apiConfig) getJWTData(r *http.Request) (TokenData, error) {
 	}
 
 	tokenData := TokenData{
-		unparsedTokenStr: unparsedTokenStr,
-		userID:           userID,
-		issuer:           issuer,
+		Token:  unparsedTokenStr,
+		userID: userID,
+		issuer: issuer,
 	}
 	return tokenData, nil
-}
-
-type TokenData struct {
-	unparsedTokenStr string
-	userID           int
-	issuer           string
 }

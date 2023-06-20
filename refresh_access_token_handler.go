@@ -6,17 +6,16 @@ import (
 	"time"
 )
 
-func (cfg *apiConfig) refreshHandler(w http.ResponseWriter, r *http.Request) {
+func (cfg *apiConfig) refreshAccessTokenHandler(w http.ResponseWriter, r *http.Request) {
 	tokenData, err := cfg.getJWTData(r)
 	if err != nil {
 		log.Printf("Error getting token data: %v", err)
 		respondWithError(w, http.StatusUnauthorized, "Coundn't get token data")
 		return
 	}
-
 	if tokenData.issuer != "chirpy-refresh" {
 		log.Printf("Error validating token: must be a refresh token")
-		respondWithError(w, http.StatusUnauthorized, "Couldn't validate token")
+		respondWithError(w, http.StatusUnauthorized, "Couldn't validate token: must be a refresh token")
 		return
 	}
 

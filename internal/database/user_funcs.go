@@ -3,18 +3,17 @@ package database
 import (
 	"fmt"
 	"log"
-
-	"golang.org/x/crypto/bcrypt"
+	"time"
 )
 
-func (db *DB) CreateUser(pw string, email string) (User, error) {
+func (db *DB) CreateUser(pw []byte, email string) (User, error) {
 	dbStruct, err := db.loadDB()
 	if err != nil {
 		return User{}, err
 	}
 
-	_, exists := dbStruct.getUserByEmail(email)
-	if exists {
+	_, emailUsed := dbStruct.Emails[email]
+	if emailUsed {
 		err := fmt.Errorf("Error email already used: %s", email)
 		return User{}, err
 	}
@@ -29,18 +28,14 @@ func (db *DB) CreateUser(pw string, email string) (User, error) {
 		}
 	}
 
-	hashedPW, err := bcrypt.GenerateFromPassword([]byte(pw), bcrypt.MinCost) // cost param min/max: 4-31
-	if err != nil {
-		return User{}, err
-	}
-
 	user := User{
 		ID:       uniqueID,
-		Password: hashedPW,
+		Password: pw,
 		Email:    email,
 	}
 
 	dbStruct.Users[user.ID] = user
+	dbStruct.Emails[email] = user.ID
 
 	err = db.writeDB(dbStruct)
 	if err != nil {
@@ -54,26 +49,31 @@ func (db *DB) CreateUser(pw string, email string) (User, error) {
 	return respUser, nil
 }
 
-func (db *DB) UpdateUser(id int, pw, email string) (User, error) {
+func (db *DB) UpdateUser(id int, pw []byte, email string) (User, error) {
 	dbStruct, err := db.loadDB()
 	if err != nil {
 		return User{}, err
 	}
 
-	hashedPW, err := bcrypt.GenerateFromPassword([]byte(pw), bcrypt.MinCost) // cost param min/max: 4-31
-	if err != nil {
-		return User{}, err
-	}
-
-	userWithEmail, exists := dbStruct.getUserByEmail(email)
-	if userWithEmail.ID != id && exists {
+	IDofUserWithEmail, emailUsed := dbStruct.Emails[email]
+	if id != IDofUserWithEmail && emailUsed {
 		err := fmt.Errorf("Error email already used: %s", email)
 		return User{}, err
 	}
 
-	user := dbStruct.Users[id]
-	user.Password = hashedPW
-	user.Email = email
+	user, userExists := dbStruct.Users[id]
+	if !userExists {
+		err := fmt.Errorf("Error email+password not found in users: %s", email)
+		return User{}, err
+	}
+
+	if email != user.Email {
+		delete(dbStruct.Emails, user.Email)
+		dbStruct.Emails[email] = id
+		user.Email = email
+	}
+
+	user.Password = pw
 	dbStruct.Users[id] = user
 
 	err = db.writeDB(dbStruct)
@@ -86,6 +86,46 @@ func (db *DB) UpdateUser(id int, pw, email string) (User, error) {
 		Email: email,
 	}
 	return respUser, nil
+}
+
+func (db *DB) GetUserByEmail(email string) (User, error) {
+	dbStruct, err := db.loadDB()
+	if err != nil {
+		return User{}, err
+	}
+
+	userID, emailUsed := dbStruct.Emails[email]
+	if !emailUsed {
+		err := fmt.Errorf("Error email+password not found in users: %s", email)
+		return User{}, err
+	}
+	user, userExists := dbStruct.Users[userID]
+	if !userExists {
+		err := fmt.Errorf("Error email+password not found in users: %s", email)
+		return User{}, err
+	}
+
+	return user, nil
+}
+
+func (db *DB) RevokeToken(token string) error {
+	dbStruct, err := db.loadDB()
+	if err != nil {
+		return err
+	}
+
+	if _, isRevoked := dbStruct.RevokedTokens[token]; isRevoked {
+		return fmt.Errorf("Error token is already revoked")
+	}
+
+	dbStruct.RevokedTokens[token] = time.Now()
+
+	err = db.writeDB(dbStruct)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (db *DB) UpgradeUser(id int) (bool, error) {
@@ -104,7 +144,7 @@ func (db *DB) UpgradeUser(id int) (bool, error) {
 
 	err = db.writeDB(dbStruct)
 	if err != nil {
-		return true, err
+		return false, err
 	}
 
 	return true, nil

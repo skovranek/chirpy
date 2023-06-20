@@ -3,48 +3,41 @@ package main
 import (
 	"log"
 	"net/http"
-	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
 func (cfg *apiConfig) loginHandler(w http.ResponseWriter, r *http.Request) {
-	params := struct {
-		Password string `json:"password"`
-		Email    string `json:"email"`
-	}{}
-
-	err := getUserParams(r, &params)
+	userParams, err := getUserParams(r)
 	if err != nil {
-		log.Printf("Error decoding request body: %v", err)
-		respondWithError(w, http.StatusInternalServerError, "Couldn't decode request body")
+		log.Printf("Error decoding user parameters: %v", err)
+		respondWithError(w, http.StatusInternalServerError, "Couldn't get request body")
 		return
 	}
 
-	user, err := cfg.db.GetUserWithEmail(params.Email)
+	user, err := cfg.db.GetUserByEmail(userParams.Email)
 	if err != nil {
 		log.Printf("Error getting user with email: %v", err)
 		respondWithError(w, http.StatusUnauthorized, "Coundn't find email+password")
 		return
 	}
 
-	pw := []byte(params.Password)
+	pw := []byte(userParams.Password)
 	err = bcrypt.CompareHashAndPassword(user.Password, pw)
 	if err != nil {
-		log.Printf("Error comparing password: %w", err)
+		log.Printf("Error comparing password: %v", err)
 		respondWithError(w, http.StatusUnauthorized, "Coundn't find email+password")
 		return
 	}
 
-	accessToken, err := cfg.createJWT("chirpy-access", time.Hour, user.ID)
+	accessToken, err := cfg.createJWT("chirpy-access", cfg.accessJWTExpInHours, user.ID)
 	if err != nil {
 		log.Printf("Error creating access token: %v", err)
 		respondWithError(w, http.StatusUnauthorized, "Coundn't create access token")
 		return
 	}
 
-	sixtyDays := time.Hour * 24 * 60
-	refreshToken, err := cfg.createJWT("chirpy-refresh", sixtyDays, user.ID)
+	refreshToken, err := cfg.createJWT("chirpy-refresh", cfg.refreshJWTExpInHours, user.ID)
 	if err != nil {
 		log.Printf("Error creating refresh token: %v", err)
 		respondWithError(w, http.StatusUnauthorized, "Coundn't create refresh token")
@@ -61,7 +54,7 @@ func (cfg *apiConfig) loginHandler(w http.ResponseWriter, r *http.Request) {
 		ID:           user.ID,
 		Email:        user.Email,
 		IsChirpyRed:  user.IsChirpyRed,
-		Token:  accessToken,
+		Token:        accessToken,
 		RefreshToken: refreshToken,
 	}
 

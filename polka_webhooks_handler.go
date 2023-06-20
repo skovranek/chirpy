@@ -17,27 +17,27 @@ func (cfg *apiConfig) polkaWebhooksHandler(w http.ResponseWriter, r *http.Reques
 	}
 
 	decoder := json.NewDecoder(r.Body)
-	decodedReq := struct {
+	eventParams := struct {
 		Event string `json:"event"`
 		Data  struct {
 			UserID int `json:"user_id"`
 		} `json:"data"`
 	}{}
 
-	err := decoder.Decode(&decodedReq)
+	err := decoder.Decode(&eventParams)
 	if err != nil {
 		log.Printf("Error decoding request body: %v", err)
 		respondWithError(w, http.StatusInternalServerError, "Couldn't decode request body")
 		return
 	}
 
-	if decodedReq.Event != "user.upgraded" {
+	if eventParams.Event != "user.upgraded" {
 		emptyResp := struct{}{}
 		respondWithJSON(w, http.StatusOK, emptyResp)
 		return
 	}
 
-	userID := decodedReq.Data.UserID
+	userID := eventParams.Data.UserID
 	exists, err := cfg.db.UpgradeUser(userID)
 	if err != nil {
 		log.Printf("Error upgrading user: %v", err)
@@ -45,12 +45,11 @@ func (cfg *apiConfig) polkaWebhooksHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 	if !exists {
-		log.Printf("Error user does not exists, cannot upgrade")
+		log.Printf("Error user does not exists, cannot upgrade user with ID #%v", userID)
 		respondWithError(w, http.StatusForbidden, "Couldn't upgrade user")
 		return
 	}
 
-	emptyResp := struct{}{}
-	respondWithJSON(w, http.StatusOK, emptyResp)
+	respondWithJSON(w, http.StatusOK, struct{}{}) // empty struct needed in response to pass tutorial test case
 	return
 }
