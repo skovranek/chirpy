@@ -85,14 +85,14 @@ Detailed information about each endpoint, including request and response example
 
 1. Check server readiness: `GET /api/healthz`
    
-   ####Example Request:
+   **Example Request:**
 
    ```bash
    GET /api/healthz
    ```
-   ####Example Response:
+   **Example Response:**
 
-   Header:
+   **Header:**
    >Status: 201
 
    ```
@@ -101,7 +101,7 @@ Detailed information about each endpoint, including request and response example
 
 2. Create user: `POST /api/users`
 
-   ####Example Request: 
+   **Example Request:** 
 
    ```bash
    POST /api/users
@@ -113,9 +113,9 @@ Detailed information about each endpoint, including request and response example
    }
    ```
 
-   ####Example Response: 
+   **Example Response:** 
 
-   Header:
+   **Header:**
    >Status: 201
 
    ```json
@@ -127,7 +127,7 @@ Detailed information about each endpoint, including request and response example
 
 3. Login: `POST /api/login`
 
-   ####Example Request:
+   **Example Request:**
 
    ```bash
    POST /api/login
@@ -139,9 +139,9 @@ Detailed information about each endpoint, including request and response example
    }
    ```
 
-   ####Example Response:
+   **Example Response:**
 
-   Header:
+   **Header:**
    >Status: 200
 
    ```json
@@ -156,18 +156,18 @@ Detailed information about each endpoint, including request and response example
 
 4. Refresh access JWT: `POST /api/refresh`
 
-   ####Example Request:
+   **Example Request:**
 
-   Header:
+   **Header:**
    >Authorization: Bearer your_valid_REFRESH_token_here
 
    ```bash
    POST /api/refresh
    ```
 
-   ####Example Response:
+   **Example Response:**
 
-   Header:
+   **Header:**
    >Status: 200
 
    ```json
@@ -178,18 +178,18 @@ Detailed information about each endpoint, including request and response example
 
 5. Revoke refresh JWT: `METHOD /api/revoke`
 
-   ####Example Request:
+   **Example Request:**
 
-   Header:
+   **Header:**
    >Authorization: Bearer your_valid_REFRESH_token_here
 
    ```bash
    POST /api/revoke
    ```
 
-   ####Example Response:
+   **Example Response:**
 
-   Header:
+   **Header:**
    >Status: 200
 
    ```json
@@ -198,9 +198,9 @@ Detailed information about each endpoint, including request and response example
 
 6. Update user: `PUT /api/users`
 
-   ####Example Request:
+   **Example Request:**
 
-   Header:
+   **Header:**
    >Authorization: Bearer your_valid_ACCESS_token_here
 
    ```bash
@@ -213,9 +213,9 @@ Detailed information about each endpoint, including request and response example
    }
    ```
 
-   ####Example Response:
+   **Example Response:**
 
-   Header:
+   **Header:**
    >Status: 200
 
    ```json
@@ -227,9 +227,9 @@ Detailed information about each endpoint, including request and response example
 
 7. Create chirp: `POST /api/chirps`
 
-   ####Example Request:
+   **Example Request:**
 
-   Header:
+   **Header:**
    >Authorization: Bearer your_valid_ACCESS_token_here
 
    ```bash
@@ -241,9 +241,9 @@ Detailed information about each endpoint, including request and response example
    }
    ```
 
-   ####Example Response:
+   **Example Response:**
 
-   Header:
+   **Header:**
    >Status: 201
 
    ```json
@@ -256,12 +256,12 @@ Detailed information about each endpoint, including request and response example
 
 8. Retrieve a filtered and sorted list of chirps: `GET /api/chirps`
 
-   ####Example Request:
+   **Example Request:**
 
-   Header:
+   **Header:**
    >Authorization: Bearer your_valid_ACCESS_token_here
 
-   #####Optional Query Parameters:
+   **Optional Query Parameters:**
 
    Get chirps by author:
    >author_id={id}
@@ -278,9 +278,9 @@ Detailed information about each endpoint, including request and response example
 
    ```
 
-   ####Example Response:
+   **Example Response:**
 
-   Header:
+   **Header:**
    >Status: 200
 
    ```json
@@ -299,9 +299,9 @@ Detailed information about each endpoint, including request and response example
    ```
 9. Retrieve a chirp: `GET /api/chirps/{chirp_id}`
 
-   ####Example Request:
+   **Example Request:**
 
-   #####Required Query Parameters:
+   **Required Query Parameters:**
 
    Get chirp by id:
    >/api/chirps/{chirp_id}
@@ -310,9 +310,9 @@ Detailed information about each endpoint, including request and response example
    GET /api/chirps/1
    ```
 
-   ####Example Response:
+   **Example Response:**
 
-   Header:
+   **Header:**
    >Status: 200
 
    ```json
@@ -325,12 +325,12 @@ Detailed information about each endpoint, including request and response example
 
 10. Delete a chirp: `DELETE /api/chirps/{chirp_id}`
 
-   ####Example Request:
+   **Example Request:**
 
-   Header:
+   **Header:**
    >Authorization: Bearer your_valid_ACCESS_token_here
 
-   #####Required Query Parameters:
+   **Required Query Parameters:**
 
    Delete chirp by id:
    >/api/chirps/{chirp_id}
@@ -339,9 +339,9 @@ Detailed information about each endpoint, including request and response example
    DELETE /api/chirps/1
    ```
 
-   ####Example Response:
+   **Example Response:**
 
-   Header:
+   **Header:**
    >Status: 200
 
    ```json
@@ -350,9 +350,9 @@ Detailed information about each endpoint, including request and response example
 
 11. Webhook from a fictional third-party named "polka": `POST /api/polka/webhooks`
 
-   ####Example Request:
+   **Example Request:**
 
-   Header: (use this fictional secret key)
+   **Header:** *(use this fictional secret key)*
    >Authorization: ApiKey f271c81ff7084ee5b99a5091b42d486e
 
    ```bash
@@ -367,9 +367,9 @@ Detailed information about each endpoint, including request and response example
    }
    ```
 
-   ####Example Response:
+   **Example Response:**
 
-   Header:
+   **Header:**
    >Status: 200
 
    ```json
