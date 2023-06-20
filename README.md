@@ -378,26 +378,7 @@ Detailed information about each endpoint, including request and response example
 
 ## Error Handling
 
-The server follows standard HTTP status codes for error responses. Possible error codes include 400 Bad Request, 401 Unauthorized, 404 Not Found, etc. Refer to the server responses for detailed error formats and messages.
-
-## server Endpoints
-
-## List Chirps
-
-Retrieve chirps from the database, optionally filtered by author ID and sorted based on the provided parameters.
-
-- **URL**: `/chirps`
-- **Method**: `GET`
-- **Query Parameters**:
-  - `author_id` (optional): Filter chirps by author ID.
-  - `sort` (optional): Sort chirps by ID in ascending or descending order. Accepted values: `asc`, `desc`.
-- **Response**:
-  - Status Code: 200 (OK)
-  - Body: An array of chirp objects in JSON format.
-
-## Error Handling
-
-If an error occurs while processing the request, an appropriate error message and status code will be returned in the response. Following the instructions for the appropriate endpoints above: First, create a user account. Then login. Then you may "chirp" (post chirps messages).
+If an error occurs while processing a request, an appropriate error message and status code will be returned in the response. Following the instructions for the appropriate endpoints above: First, create a user account. Then login. Then you may "chirp" (post chirps messages).
 
 ## Testing
 
