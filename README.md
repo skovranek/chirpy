@@ -33,8 +33,8 @@ This is just an instructional project and isn't meant to be cloned or deployed. 
 
 3. Configure the server by creating a ".env" file, including these not-so-secret keys from the tutorial:
    ```bash
-   POLKA_API_KEY=f271c81ff7084ee5b99a5091b42d486e
-   JWT_SECRET=CKpJVLHqOoYtKX/hjkQ6iPtVhqeqmAKYF4uPfqGoQxTVVe8ZMbedqRcjUrhlkiy1keNbSQq3Cn9RnZ2xTKM8GA==
+   POLKA_API_KEY="f271c81ff7084ee5b99a5091b42d486e"
+   JWT_SECRET="CKpJVLHqOoYtKX/hjkQ6iPtVhqeqmAKYF4uPfqGoQxTVVe8ZMbedqRcjUrhlkiy1keNbSQq3Cn9RnZ2xTKM8GA=="
    ```
 
 4. Build and run the server with the debug mode flag, or not. Debug mode deletes the old database.json on start up for testing.
@@ -48,13 +48,13 @@ This is just an instructional project and isn't meant to be cloned or deployed. 
 Here is an example '.env' file with the available environmental variables you can define. At minimum, you must include the provided fictional secret keys:
 
    ```bash
-    ROOT=.
-    PORT=8080
-    DB_PATH=database.json
-    POLKA_API_KEY=f271c81ff7084ee5b99a5091b42d486e
-    JWT_SECRET=CKpJVLHqOoYtKX/hjkQ6iPtVhqeqmAKYF4uPfqGoQxTVVe8ZMbedqRcjUrhlkiy1keNbSQq3Cn9RnZ2xTKM8GA==
-    ACCESS_JWT_EXP_IN_HOURS=1
-    REFRESH_JWT_EXP_IN_HOURS=1440
+    ROOT="."
+    PORT="8080"
+    DB_PATH="database.json"
+    POLKA_API_KEY="f271c81ff7084ee5b99a5091b42d486e"
+    JWT_SECRET="CKpJVLHqOoYtKX/hjkQ6iPtVhqeqmAKYF4uPfqGoQxTVVe8ZMbedqRcjUrhlkiy1keNbSQq3Cn9RnZ2xTKM8GA=="
+    ACCESS_JWT_EXP_IN_HOURS="1"
+    REFRESH_JWT_EXP_IN_HOURS="1440"
    ```
 
 ## APP
